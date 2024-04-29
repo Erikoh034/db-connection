@@ -1,23 +1,36 @@
 const express = require('express');
 const mysql = require('mysql2/promise');
 const dotenv = require('dotenv');
+const path = require('path');
 
 
 const app = express();
 
 dotenv.config();
-// Replace with your MySQL connection details
+
+const port = process.env.PORT || 3000
 const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'your_username',
-  password: 'your_password',
-  database: 'your_database'
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
+});
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Route to handle form submission
 app.post('/submit-data', async (req, res) => {
+
+  console.log(req.body);
   const name = req.body.name;
   const email = req.body.email;
+
 
   try {
     const connection = await pool.getConnection();
@@ -33,5 +46,5 @@ app.post('/submit-data', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+  console.log(`Go to http://localhost:3000 in your browser` )
 });

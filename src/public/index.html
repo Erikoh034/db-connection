@@ -30,13 +30,16 @@
             const email = document.getElementById('email').value;
 
             try {
-                const response = await fetch('/submit-data', {
+                const response = await fetch('http://localhost:3000/submit-data', {
                     method: 'POST',
                     body: JSON.stringify({ name, email }),
                     headers: { 'Content-Type': 'application/json' }
                 });
                 const data = await response.text();
                 document.getElementById('message').innerHTML = data;
+
+                document.getElementById('name').value = '';
+                document.getElementById('email').value = '';
             } catch (error) {
                 console.error(error);
                 document.getElementById('message').innerHTML = 'Error submitting data.';
