@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./main.css">
+    <title>Save data to MySQL</title>
+</head>
+
+<body>
+    <h1>User Registration</h1>
+    <form id="userForm">
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" required>
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" required>
+        <br>
+        <button type="submit">Register</button>
+    </form>
+
+    <div id="message"></div>
+
+    <script>
+        document.getElementById('userForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent default form submission
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+
+            try {
+                const response = await fetch('/submit-data', {
+                    method: 'POST',
+                    body: JSON.stringify({ name, email }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.text();
+                document.getElementById('message').innerHTML = data;
+            } catch (error) {
+                console.error(error);
+                document.getElementById('message').innerHTML = 'Error submitting data.';
+            }
+        });
+    </script>
+</body>
+
+</html>
